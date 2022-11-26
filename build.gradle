@@ -1,0 +1,12 @@
+buildscript {
+	ext {
+		springBootVersion = '2.7.5'
+        lombokVersion = '1.18.24'
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version "${springBootVersion}"
+}
+
+apply from: './main.gradle'
