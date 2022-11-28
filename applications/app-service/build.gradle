@@ -1,8 +1,8 @@
 apply plugin: 'org.springframework.boot'
 
 dependencies {
-	implementation project(':jpa-repository')
-	implementation project(':api-rest')
+    implementation project(':jpa-repository')
+    implementation project(':api-rest')
     implementation project(':model')
     implementation project(':usecase')
     implementation 'org.springframework.boot:spring-boot-starter'
@@ -10,6 +10,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
+}
+
+configurations.all {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 }
 
 task explodedJar(type: Copy) {

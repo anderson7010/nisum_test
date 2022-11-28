@@ -7,8 +7,11 @@ import java.util.UUID;
 
 public interface UserRepository {
     User saveUser(User user);
+
     User findUserById(UUID id);
+
     User findUserByEmail(String email);
+
     List<User> findUsers();
 
     boolean existsUserByEmail(String email);

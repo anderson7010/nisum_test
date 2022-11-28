@@ -1,6 +1,7 @@
 package co.com.nisum.api.user.request;
 
 import co.com.nisum.api.common.config.RegexProperties;
+import co.com.nisum.api.common.response.ResponseMessage;
 import co.com.nisum.model.user.User;
 import co.com.nisum.model.validation.ValidationResult;
 import lombok.Data;
@@ -36,10 +37,12 @@ public class UserRequest {
 
     public ValidationResult isValid(RegexProperties regexProperties) {
         if (!ValidationResult.patternMatches(email, regexProperties.getEmailRegex())) {
-            return ValidationResult.builder(Boolean.FALSE, "Invalid format email.");
+            return ValidationResult.builder(Boolean.FALSE,
+                    ResponseMessage.EMAIL_VALIDATION_ERROR_MESSAGE.getMessage());
         }
         if (!ValidationResult.patternMatches(password, regexProperties.getPasswordRegex())) {
-            return ValidationResult.builder(Boolean.FALSE, "Invalid format password.");
+            return ValidationResult.builder(Boolean.FALSE,
+                    ResponseMessage.PASSWORD_VALIDATION_ERROR_MESSAGE.getMessage());
         }
         return ValidationResult.builder(Boolean.TRUE, null);
     }

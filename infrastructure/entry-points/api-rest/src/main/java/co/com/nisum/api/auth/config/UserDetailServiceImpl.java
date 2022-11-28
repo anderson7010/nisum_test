@@ -1,5 +1,6 @@
 package co.com.nisum.api.auth.config;
 
+import co.com.nisum.api.common.response.ResponseMessage;
 import co.com.nisum.model.user.User;
 import co.com.nisum.usecase.user.GetUserUseCase;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if (Objects.nonNull(user)) {
             return new UserDetailsImpl(user);
         } else {
-            throw new UsernameNotFoundException("User " + email + " not found.");
+            throw new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND_ERROR_MESSAGE.getMessage());
         }
     }
 }

@@ -1,7 +1,6 @@
 package co.com.nisum.model.validation;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.regex.Pattern;

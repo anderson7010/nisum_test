@@ -1,8 +1,11 @@
 package co.com.nisum.api.advice;
 
 import co.com.nisum.api.common.response.ErrorResponse;
+import co.com.nisum.api.common.response.ResponseMessage;
+import co.com.nisum.model.common.Constant;
 import co.com.nisum.model.exception.BusinessException;
 import co.com.nisum.model.exception.UserNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
@@ -24,47 +28,53 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status,
             WebRequest request) {
         StringBuilder sb = new StringBuilder();
-        sb.append("There was a problem with the request");
-        ex.getBindingResult().getFieldErrors().forEach(error -> sb.append(", ").append(error.getField())
-                .append(" ").append(error.getDefaultMessage()));
-        ErrorResponse response = ErrorResponse.build(sb.toString());
-        return ResponseEntity.unprocessableEntity().body(response);
+        sb.append(ResponseMessage.INVALID_REQUEST_ERROR_MESSAGE.getMessage());
+        ex.getBindingResult().getFieldErrors().forEach(error -> sb.append(Constant.PERIOD.getValue())
+                .append(Constant.SPACE.getValue()).append(error.getField())
+                .append(Constant.SPACE.getValue()).append(error.getDefaultMessage()));
+        log.error(sb.toString());
+        return ResponseEntity.unprocessableEntity().body(ErrorResponse.build(sb.toString()));
     }
 
     @Override
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
                                                         HttpStatus status, WebRequest request) {
-        String sb = "There was a problem with the request. " + ex.getValue() + " is an invalid value.";
-        ErrorResponse response = ErrorResponse.build(sb);
-        return ResponseEntity.unprocessableEntity().body(response);
+        String responseMessage = ResponseMessage.INVALID_REQUEST_ERROR_MESSAGE.getMessage()
+                + Constant.PERIOD.getValue() + Constant.SPACE.getValue() + ex.getValue() +
+                ResponseMessage.INVALID_VALUE_ERROR_MESSAGE.getMessage();
+        log.error(responseMessage);
+        return ResponseEntity.badRequest().body(ErrorResponse.build(responseMessage));
     }
 
     @ExceptionHandler({IllegalArgumentException.class, BusinessException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.build(ex.getMessage()));
+        log.error(ex.getMessage());
+        return ResponseEntity.badRequest().body(ErrorResponse.build(ex.getMessage()));
     }
 
     @ExceptionHandler({UserNotFoundException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handleNotFoundException() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.build("User not found."));
+        log.error(ResponseMessage.USER_NOT_FOUND_ERROR_MESSAGE.getMessage());
+        return ResponseEntity.badRequest()
+                .body(ErrorResponse.build(ResponseMessage.USER_NOT_FOUND_ERROR_MESSAGE.getMessage()));
     }
 
     @ExceptionHandler({AuthenticationException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<ErrorResponse> handleAuthenticationException() {
+        log.error(ResponseMessage.AUTHENTICATION_ERROR_MESSAGE.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ErrorResponse.build("Authentication failed. Bad credentials."));
+                .body(ErrorResponse.build(ResponseMessage.AUTHENTICATION_ERROR_MESSAGE.getMessage()));
     }
 
     @ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponse> handleException() {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorResponse.build("There was an unexpected error. Please contact system admin."));
+        log.error(ResponseMessage.INTERNAL_SERVER_ERROR_MESSAGE.getMessage());
+        return ResponseEntity.internalServerError()
+                .body(ErrorResponse.build(ResponseMessage.INTERNAL_SERVER_ERROR_MESSAGE.getMessage()));
     }
 }

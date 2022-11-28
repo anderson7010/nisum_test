@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
     private final PhoneMapper phoneMapper;
+
     public User toEntity(UserData userData) {
         return User.builder()
                 .id(userData.getId())
@@ -29,6 +29,7 @@ public class UserMapper {
                         .map(phoneMapper::toEntity).collect(Collectors.toList()))
                 .build();
     }
+
     public UserData toData(User user) {
         UserData userData = new UserData();
         userData.setId(user.getId());
