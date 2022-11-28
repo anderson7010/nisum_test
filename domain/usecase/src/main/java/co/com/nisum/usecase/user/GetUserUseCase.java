@@ -17,4 +17,8 @@ public class GetUserUseCase {
     public List<User> getUsers() {
         return userRepository.findUsers();
     }
+
+    public boolean existsUserByEmail(String email) {
+        return userRepository.existsUserByEmail(email);
+    }
 }

@@ -11,3 +11,7 @@ spring:
   jpa:
     defer-datasource-initialization: true
     databasePlatform: "org.hibernate.dialect.H2Dialect"
+api:
+  validation:
+    passwordRegex: "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;'.,?/*~$^+=<>]).{8,20}$"
+    emailRegex: "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$"

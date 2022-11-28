@@ -2,8 +2,8 @@ package co.com.nisum.api.auth;
 
 import co.com.nisum.api.auth.config.UserDetailsImpl;
 import co.com.nisum.api.auth.request.AuthRequest;
-import co.com.nisum.api.auth.util.TokenUtils;
-import co.com.nisum.api.response.Response;
+import co.com.nisum.api.common.util.TokenUtils;
+import co.com.nisum.api.common.response.SuccessResponse;
 import co.com.nisum.usecase.user.UpdateUserUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -26,8 +26,8 @@ public class AuthController {
     private final UpdateUserUseCase updateUserUseCase;
 
     @PostMapping("/login")
-    public ResponseEntity<Response<String>> authenticateUser(@RequestBody AuthRequest authRequest) {
-        Response<String> response = new Response<>();
+    public ResponseEntity<SuccessResponse<String>> authenticateUser(@RequestBody AuthRequest authRequest) {
+        SuccessResponse<String> response = new SuccessResponse<>();
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authRequest.getEmail(), authRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);

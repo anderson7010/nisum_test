@@ -1,6 +1,6 @@
 package co.com.nisum.config.security;
 
-import co.com.nisum.api.auth.util.TokenUtils;
+import co.com.nisum.api.common.util.TokenUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -15,6 +15,7 @@ import java.util.Objects;
 
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {

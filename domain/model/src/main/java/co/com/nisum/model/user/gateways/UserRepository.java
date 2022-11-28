@@ -10,4 +10,6 @@ public interface UserRepository {
     User findUserById(UUID id);
     User findUserByEmail(String email);
     List<User> findUsers();
+
+    boolean existsUserByEmail(String email);
 }

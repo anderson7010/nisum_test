@@ -1,18 +1,15 @@
-package co.com.nisum.api.auth.util;
+package co.com.nisum.api.common.util;
 
-import co.com.nisum.model.user.gateways.UserTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Date;
 
-@Component
-public class TokenUtils implements UserTokenRepository {
+public class TokenUtils {
     private static final String SECRET = "kW89L4QjyfWIM0xagcVqn58LMWlQRwxj";
     private static final Long VALIDATION_TIME = 3600000L;
 
@@ -37,10 +34,5 @@ public class TokenUtils implements UserTokenRepository {
         } catch (JwtException e) {
             return null;
         }
-    }
-
-    @Override
-    public String generateToken(String email) {
-        return createToken(email);
     }
 }

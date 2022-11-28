@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class UpdateUserUseCase {
@@ -18,17 +17,6 @@ public class UpdateUserUseCase {
             user.setLastLogin(LocalDateTime.now());
             user.setModified(LocalDateTime.now());
             user.setToken(token);
-            userRepository.saveUser(user);
-        } else {
-            throw new IllegalArgumentException("User not found");
-        }
-    }
-
-    public void updateUserState(UUID id, boolean isActive) {
-        User user = userRepository.findUserById(id);
-        if (Objects.nonNull(user)) {
-            user.setModified(LocalDateTime.now());
-            user.setIsActive(isActive);
             userRepository.saveUser(user);
         } else {
             throw new IllegalArgumentException("User not found");

@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Repository
 @RequiredArgsConstructor
 public class UserRepositoryAdapter implements UserRepository {
-
     private final UserDataRepository repository;
     private final UserMapper userMapper;
 
@@ -37,5 +36,10 @@ public class UserRepositoryAdapter implements UserRepository {
     @Override
     public List<User> findUsers() {
         return repository.findByIsActiveTrue().stream().map(userMapper::toEntity).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean existsUserByEmail(String email) {
+        return repository.existsByEmailAndIsActiveTrue(email);
     }
 }
