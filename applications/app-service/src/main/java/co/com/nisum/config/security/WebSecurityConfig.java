@@ -21,16 +21,7 @@ public class WebSecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/h2/**").permitAll()
-                .antMatchers("/api/v1/auth/**").permitAll()
-                .anyRequest().authenticated().and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .headers().frameOptions().sameOrigin().and()
-                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+        return http.csrf().disable().authorizeRequests().antMatchers("/h2/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll().antMatchers("/api/v1/auth/**").permitAll().anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().headers().frameOptions().sameOrigin().and().addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 
     @Bean
@@ -40,9 +31,6 @@ public class WebSecurityConfig {
 
     @Bean
     AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder()).and()
-                .build();
+        return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()).and().build();
     }
 }

@@ -13,12 +13,12 @@ import java.util.UUID;
 public class DeleteUserUseCase {
     private final UserRepository userRepository;
 
-    public void deleteUser(UUID id) throws UserNotFoundException {
+    public User deleteUser(UUID id) throws UserNotFoundException {
         User user = userRepository.findUserById(id);
         if (Objects.nonNull(user)) {
             user.setModified(LocalDateTime.now());
             user.setIsActive(Boolean.FALSE);
-            userRepository.saveUser(user);
+            return userRepository.saveUser(user);
         } else {
             throw new UserNotFoundException();
         }

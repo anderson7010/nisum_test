@@ -16,27 +16,18 @@ import co.com.nisum.usecase.user.GetUserUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/v1/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class UserController implements UserApi {
     private final CreateUserUseCase createUserUseCase;
     private final GetUserUseCase getUserUseCase;
     private final DeleteUserUseCase deleteUserUseCase;
@@ -44,9 +35,8 @@ public class UserController {
     private final RegexProperties regexProperties;
     private final TokenUtils tokenUtils;
 
-    @PostMapping
     public ResponseEntity<SuccessResponse<UserResponse>> createUser(
-            @Valid @RequestBody UserRequest userRequest) throws Exception {
+            UserRequest userRequest) throws BusinessException {
         SuccessResponse<UserResponse> response = new SuccessResponse<>();
         ValidationResult validationResult = userRequest.isValid(regexProperties);
         if (!validationResult.isValid()) {
@@ -64,7 +54,6 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping
     public ResponseEntity<SuccessResponse<List<UserResponse>>> getUsers() {
         SuccessResponse<List<UserResponse>> response = new SuccessResponse<>();
         List<UserResponse> users = getUserUseCase.getUsers().stream()
@@ -75,8 +64,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) throws UserNotFoundException {
+    public ResponseEntity<Void> deleteUser(UUID id) throws UserNotFoundException {
         deleteUserUseCase.deleteUser(id);
         log.info(ResponseMessage.USER_DELETION_SUCCESS_MESSAGE.getMessage());
         return ResponseEntity.noContent().build();

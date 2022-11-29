@@ -12,13 +12,13 @@ import java.util.Objects;
 public class UpdateUserUseCase {
     private final UserRepository userRepository;
 
-    public void updateUserLoginInfo(String email, String token) throws UserNotFoundException {
+    public User updateUserLoginInfo(String email, String token) throws UserNotFoundException {
         User user = userRepository.findUserByEmail(email);
         if (Objects.nonNull(user)) {
             user.setLastLogin(LocalDateTime.now());
             user.setModified(LocalDateTime.now());
             user.setToken(token);
-            userRepository.saveUser(user);
+            return userRepository.saveUser(user);
         } else {
             throw new UserNotFoundException();
         }
